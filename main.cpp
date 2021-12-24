@@ -18,7 +18,7 @@
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include <GL/gl.h>
+#include <GLES2/gl2.h>
 
 #include <cstdlib>
 #include <cstring>
@@ -150,6 +150,8 @@ static const device_property_t deviceProperties[] {
 
 static const int devicePropertiesSize = sizeof(deviceProperties) / sizeof(device_property_t);
 
+extern void probeGLVersion(string indent);
+extern void probeGLESVersion(string indent);
 
 static void printEnum(int value, attrib_t *attr)
 {
@@ -257,6 +259,7 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
     }
 
     if (numConfigs > 0) {
+        // probe OpenGL version
         if(!eglBindAPI(EGL_OPENGL_API)) {
             cout << "eglBindAPI failed" << endl;
             return;
@@ -268,10 +271,22 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
             return;
         }
 
-        GLint major = 0, minor = 0;
-        glGetIntegerv(GL_MAJOR_VERSION, &major);
-        glGetIntegerv(GL_MINOR_VERSION, &minor);
-        cout << indent << "OpenGL version: " << major << "." << minor << endl;
+        probeGLVersion(indent);
+        eglDestroyContext(display, context);
+
+        // probe OpenGL ES version
+        if(!eglBindAPI(EGL_OPENGL_ES_API)) {
+            cout << "eglBindAPI failed" << endl;
+            return;
+        }
+
+        context = eglCreateContext(display, configs[0], EGL_NO_CONTEXT, NULL);
+        if (!eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context) ){
+            cout << "eglMakeCurrent failed" << endl;
+            return;
+        }
+
+        probeGLESVersion(indent);
     }
 
     for (int i = 0; i < numConfigs; ++i) {

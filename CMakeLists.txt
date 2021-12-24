@@ -4,7 +4,7 @@ project(eglinfo VERSION 0.1)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(GNUInstallDirs)
 
-set(EGLINFO_SOURCES main.cpp)
+set(EGLINFO_SOURCES main.cpp gl.cpp gles.cpp)
 
 find_package(OpenGL REQUIRED)
 set(EGLINFO_INCLUDE_DIRECTORIES ${OPENGL_EGL_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
