@@ -18,6 +18,7 @@
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
+#include <GL/gl.h>
 
 #include <cstdlib>
 #include <cstring>
@@ -253,6 +254,21 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
     if (!eglGetConfigs(display, configs, numConfigs, &numConfigs)) {
         cerr << "Could not retrieve EGL configurations!" << endl;
         exit(1);
+    }
+
+    if (numConfigs > 0) {
+        if(!eglBindAPI(EGL_OPENGL_API)) {
+            cout << "eglBindAPI failed" << endl;
+            return;
+        }
+
+        EGLContext context = eglCreateContext(display, configs[0], EGL_NO_CONTEXT, NULL);
+        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context);
+
+        GLint major = 0, minor = 0;
+        glGetIntegerv(GL_MAJOR_VERSION, &major);
+        glGetIntegerv(GL_MINOR_VERSION, &minor);
+        cout << "OpenGL version: " << major << "." << minor << endl;
     }
 
     for (int i = 0; i < numConfigs; ++i) {

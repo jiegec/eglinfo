@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.11)
 project(eglinfo VERSION 0.1)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
@@ -18,10 +18,11 @@ else ()
     set(EGLINFO_LIBRARIES ${EGL_LIBRARIES})
     add_definitions(${EGL_DEFINITIONS})
 endif ()
+find_package(OpenGL REQUIRED)
 
 add_executable(eglinfo ${EGLINFO_SOURCES})
 set_property(TARGET eglinfo PROPERTY CXX_STANDARD 11)
-target_include_directories(eglinfo PUBLIC ${EGLINFO_INCLUDE_DIRECTORIES})
-target_link_libraries (eglinfo ${EGLINFO_LIBRARIES})
+target_include_directories(eglinfo PUBLIC ${EGLINFO_INCLUDE_DIRECTORIES} ${OPENGL_INCLUDE_DIR})
+target_link_libraries (eglinfo ${EGLINFO_LIBRARIES} ${OPENGL_opengl_LIBRARY})
 
 install(TARGETS eglinfo DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT "runtime")
