@@ -6,15 +6,13 @@ include(GNUInstallDirs)
 
 set(EGLINFO_SOURCES main.cpp)
 
-find_package(EGL REQUIRED)
 find_package(OpenGL REQUIRED)
-set(EGLINFO_INCLUDE_DIRECTORIES ${EGL_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
-set(EGLINFO_LIBRARIES ${EGL_LIBRARIES} ${OPENGL_opengl_LIBRARY})
-add_definitions(${EGL_DEFINITIONS})
+set(EGLINFO_INCLUDE_DIRECTORIES ${OPENGL_EGL_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+set(EGLINFO_LIBRARIES OpenGL::EGL OpenGL::GL)
 
 add_executable(eglinfo ${EGLINFO_SOURCES})
 set_property(TARGET eglinfo PROPERTY CXX_STANDARD 11)
 target_include_directories(eglinfo PUBLIC ${EGLINFO_INCLUDE_DIRECTORIES})
-target_link_libraries (eglinfo ${EGLINFO_LIBRARIES})
+target_link_libraries(eglinfo ${EGLINFO_LIBRARIES})
 
 install(TARGETS eglinfo DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT "runtime")
