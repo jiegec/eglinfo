@@ -353,7 +353,9 @@ static void printDevices()
                 case device_property_t::String:
                 {
                     const char* value = eglQueryDeviceStringEXT(device, property.name);
-                    cout << "  " << property.displayName << ": " << value << endl;
+                    if (value) {
+                        cout << "  " << property.displayName << ": " << value << endl;
+                    }
                     break;
                 }
                 case device_property_t::Attribute:
