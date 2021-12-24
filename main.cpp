@@ -226,7 +226,7 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
     EGLint majorVersion, minorVersion;
     if (!eglInitialize(display, &majorVersion, &minorVersion)) {
         cerr << "Could not initialize EGL!" << endl;
-        exit(1);
+        return;
     }
 
     cout << indent << "EGL version: " << majorVersion << "." << minorVersion << endl;
@@ -268,7 +268,7 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
         GLint major = 0, minor = 0;
         glGetIntegerv(GL_MAJOR_VERSION, &major);
         glGetIntegerv(GL_MINOR_VERSION, &minor);
-        cout << "OpenGL version: " << major << "." << minor << endl;
+        cout << indent << "OpenGL version: " << major << "." << minor << endl;
     }
 
     for (int i = 0; i < numConfigs; ++i) {
