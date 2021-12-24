@@ -225,7 +225,7 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
 {
     EGLint majorVersion, minorVersion;
     if (!eglInitialize(display, &majorVersion, &minorVersion)) {
-        cerr << "Could not initialize EGL!" << endl;
+        cout << "Could not initialize EGL!" << endl;
         return;
     }
 
@@ -244,7 +244,7 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
 
     EGLint numConfigs;
     if (!eglGetConfigs(display, 0, 0, &numConfigs) && numConfigs > 0) {
-        cerr << "Could not retrieve the number of EGL configurations!" << endl;
+        cout << "Could not retrieve the number of EGL configurations!" << endl;
         exit(1);
     }
 
@@ -252,7 +252,7 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
 
     EGLConfig *configs = new EGLConfig[numConfigs];
     if (!eglGetConfigs(display, configs, numConfigs, &numConfigs)) {
-        cerr << "Could not retrieve EGL configurations!" << endl;
+        cout << "Could not retrieve EGL configurations!" << endl;
         exit(1);
     }
 
@@ -263,7 +263,10 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
         }
 
         EGLContext context = eglCreateContext(display, configs[0], EGL_NO_CONTEXT, NULL);
-        eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context);
+        if (!eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, context) ){
+            cout << "eglMakeCurrent failed" << endl;
+            return;
+        }
 
         GLint major = 0, minor = 0;
         glGetIntegerv(GL_MAJOR_VERSION, &major);
@@ -397,7 +400,7 @@ int main(int argc, char** argv)
 
     EGLDisplay display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     if (display == EGL_NO_DISPLAY) {
-        cerr << "Could not obtain EGL display!" << endl;
+        cout << "Could not obtain EGL display!" << endl;
         exit(1);
     }
     cout << "Default display" << endl;
