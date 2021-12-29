@@ -26,4 +26,5 @@ void probeGLVersion(string indent) {
 
         printGLString(indent, GL_RENDERER, "renderer");
         printGLString(indent, GL_VENDOR, "vendor");
+        printGLString(indent, GL_EXTENSIONS, "extension");
 }

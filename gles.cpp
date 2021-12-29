@@ -23,4 +23,5 @@ void probeGLESVersion(string indent) {
 
         printGLESString(indent, GL_RENDERER, "renderer");
         printGLESString(indent, GL_VENDOR, "vendor");
+        printGLESString(indent, GL_EXTENSIONS, "extension");
 }
