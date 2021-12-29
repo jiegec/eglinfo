@@ -4,6 +4,15 @@
 
 using namespace std;
 
+void printGLString(string indent, GLenum e, const char *name) {
+        const GLubyte *s = glGetString(e);
+        if (s) {
+                cout << indent << "OpenGL " << name << ": " << s << endl;
+	} else {
+		cout << indent << "OpenGL " << name << ": unknown" << endl;
+	}
+}
+
 void probeGLVersion(string indent) {
         GLint major = 0, minor = 0;
         glGetIntegerv(GL_MAJOR_VERSION, &major);
@@ -14,8 +23,7 @@ void probeGLVersion(string indent) {
         } else {
                 cout << indent << "OpenGL version: " << major << "." << minor << endl;
         }
-        const GLubyte *renderer = glGetString(GL_RENDERER);
-        if (renderer) {
-                cout << indent << "OpenGL renderer: " << renderer << endl;
-        }
+
+        printGLString(indent, GL_RENDERER, "renderer");
+        printGLString(indent, GL_VENDOR, "vendor");
 }
