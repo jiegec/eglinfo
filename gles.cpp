@@ -14,13 +14,7 @@ void printGLESString(string indent, GLenum e, const char *name) {
 }
 
 void probeGLESVersion(string indent) {
-        const GLubyte *ver = glGetString(GL_VERSION);
-	if (ver) {
-		cout << indent << "OpenGL ES version: " << ver << endl;
-	} else {
-		cout << indent << "OpenGL ES version: unknown" << endl;
-	}
-
+        printGLESString(indent, GL_VERSION, "version");
         printGLESString(indent, GL_RENDERER, "renderer");
         printGLESString(indent, GL_VENDOR, "vendor");
         printGLESString(indent, GL_EXTENSIONS, "extension");

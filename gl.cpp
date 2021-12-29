@@ -26,5 +26,6 @@ void probeGLVersion(string indent) {
 
         printGLString(indent, GL_RENDERER, "renderer");
         printGLString(indent, GL_VENDOR, "vendor");
+        printGLString(indent, GL_SHADING_LANGUAGE_VERSION, "shading language version");
         printGLString(indent, GL_EXTENSIONS, "extension");
 }
