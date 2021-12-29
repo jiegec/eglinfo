@@ -18,11 +18,11 @@
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
-#include <GLES2/gl2.h>
 
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
@@ -128,6 +128,7 @@ static attrib_t attributes[] {
 #undef A_FLAG
 
 static const int attributesSize = sizeof(attributes) / sizeof(attrib_t);
+static int verbose = 0;
 
 struct device_property_t {
     EGLint name;
@@ -289,28 +290,30 @@ static void printDisplay(EGLDisplay display, const char* indent = "")
         probeGLESVersion(indent);
     }
 
-    for (int i = 0; i < numConfigs; ++i) {
-        cout << indent << "Configuration " << i << ":" << endl;
-        for (int j = 0; j < attributesSize; ++j) {
-            attrib_t *attr = &attributes[j];
-            EGLint value;
-            EGLBoolean result = eglGetConfigAttrib(display, configs[i], attr->attribute, &value);
-            cout << indent << "  " << attr->displayName << ": ";
-            if (result) {
-                if (attr->enumMap) {
-                    if (!attr->isFlag)
-                        printEnum(value, attr);
-                    else
-                        printFlags(value, attr);
+    if (verbose) {
+        for (int i = 0; i < numConfigs; ++i) {
+            cout << indent << "Configuration " << i << ":" << endl;
+            for (int j = 0; j < attributesSize; ++j) {
+                attrib_t *attr = &attributes[j];
+                EGLint value;
+                EGLBoolean result = eglGetConfigAttrib(display, configs[i], attr->attribute, &value);
+                cout << indent << "  " << attr->displayName << ": ";
+                if (result) {
+                    if (attr->enumMap) {
+                        if (!attr->isFlag)
+                            printEnum(value, attr);
+                        else
+                            printFlags(value, attr);
+                    } else {
+                        cout << value;
+                    }
                 } else {
-                    cout << value;
+                    cout << "<failed>";
                 }
-            } else {
-                cout << "<failed>";
+                cout << endl;
             }
             cout << endl;
         }
-        cout << endl;
     }
 
     delete[] configs;
@@ -400,8 +403,18 @@ static void printDevices()
 }
 #endif
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
+    char ch;
+    while ((ch = getopt(argc, argv, "v")) != -1) {
+        switch (ch) {
+        case 'v':
+            verbose = 1;
+            break;
+        default:
+            break;
+        }
+    };
+
     const char* clientExts = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
     if (clientExts)
         cout << "Client extensions: " << clientExts << endl << endl;
